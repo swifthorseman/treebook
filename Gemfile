@@ -9,6 +9,10 @@ group :development, :test do
   gem 'awesome_print'
 end
 
+group :production do
+  gem 'pg'
+end
+
 # Devise for Authentication
 gem 'devise'
 
