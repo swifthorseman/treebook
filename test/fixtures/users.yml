@@ -23,3 +23,11 @@ dummy_test_user_02:
     profile_name: "someone"
     email: "someone@___.com"
     encrypted_password: "password"
+
+
+mikethefrog:
+    first_name: "Mike"
+    last_name: "The Frog"
+    profile_name: "mikethefrog"
+    email: "mikethefrog@teamtreehouse.com"
+    encrypted_password: "password"
