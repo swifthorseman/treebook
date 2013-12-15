@@ -9,6 +9,10 @@ group :development, :test do
   gem 'awesome_print'
 end
 
+group :test do
+  gem 'shoulda'
+end
+
 group :production do
   gem 'pg'
 end
