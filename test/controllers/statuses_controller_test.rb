@@ -11,6 +11,26 @@ class StatusesControllerTest < ActionController::TestCase
     assert_not_nil assigns(:statuses)
   end
 
+  # don't like it at all – defeats the purpose of blocking someone
+  # if all they need to do is log out to view the blocked-people's post.
+  # perhaps, 'block' should be renamed 'unfollow'
+  test "should display users' post when not logged in" do
+    users(:blocked_friend).statuses.create(content: 'blockedddd!')
+    users(:mikethefrog).statuses.create(content: 'yahoo!')
+    get :index
+    assert_match /yahoo\!/, response.body
+    assert_match /blockedddd\!/, response.body
+  end
+
+  test "should not display blocked users' post when logged in" do
+    sign_in users(:dummy_test_user_01)
+    users(:blocked_friend).statuses.create(content: 'blockedddd!')
+    users(:mikethefrog).statuses.create(content: 'yahoo!')
+    get :index
+    assert_match /yahoo\!/, response.body
+    assert_no_match /blockedddd\!/, response.body
+  end
+
   test "should be redirected when not logged in" do
     get :new
     assert_response :redirect

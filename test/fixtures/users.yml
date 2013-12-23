@@ -14,20 +14,23 @@ dummy_test_user_01:
     first_name: "some"
     last_name: "thing"
     profile_name: "something"
-    email: "something@___.com"
-    encrypted_password: "password"
+    email: "something@example.com"
+    encrypted_password: "$2a$10$Fh/Hm8RxDsuPTeBUr6864.GARlcmt7zF2WspaXGr3BIv2C27N.osq"
     
 dummy_test_user_02:
     first_name: "some"
     last_name: "one"
     profile_name: "someone"
-    email: "someone@___.com"
-    encrypted_password: "password"
-
+    email: "someone@example.com"
 
 mikethefrog:
     first_name: "Mike"
     last_name: "The Frog"
     profile_name: "mikethefrog"
-    email: "mikethefrog@teamtreehouse.com"
-    encrypted_password: "password"
+    email: "mikethefrog@example.com"
+
+blocked_friend:
+    first_name: "Blocked"
+    last_name: "Friend"
+    email: 'blocked@example.com'
+    profile_name: 'youblockedme'

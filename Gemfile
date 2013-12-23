@@ -11,6 +11,7 @@ end
 
 group :test do
   gem 'shoulda'
+  gem 'factory_girl_rails'
 end
 
 group :production do
@@ -22,6 +23,12 @@ gem 'devise'
 
 # simple_form for forms
 gem 'simple_form'
+
+# FSM
+gem 'state_machine'
+
+gem 'draper'
+gem 'js-routes'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
