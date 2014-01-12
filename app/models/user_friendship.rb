@@ -6,7 +6,7 @@ class UserFriendship < ActiveRecord::Base
   after_destroy :delete_mutual_friendship!
   
   state_machine :state, initial: :pending do
-    after_transition on: :accept, do: [:send_acceptance_email, :accept_mutual_friendship!]
+    after_transition on: :accept, do: [:send_acceptance_email, :accept_mutual_friendship!]  # creats a bang method on accept
     after_transition on: :block, do: [:block_mutual_friendship!]
 
     state :requested

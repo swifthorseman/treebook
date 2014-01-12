@@ -13,6 +13,7 @@ class UserFriendshipsControllerTest < ActionController::TestCase
 
     context "when logged in" do
       setup do
+        # call factory girl's create methods to construct friendship objects
         @friendship1 = create(:pending_user_friendship, user: users(:dummy_test_user_01), friend: create(:user, first_name: 'Pending', last_name: 'Friend'))
         @friendship2 = create(:accepted_user_friendship, user: users(:dummy_test_user_01), friend: create(:user, first_name: 'Active', last_name: 'Friend'))
         @friendship3 = create(:requested_user_friendship, user: users(:dummy_test_user_01), friend: create(:user, first_name: 'Requested', last_name: 'Friend'))
@@ -182,7 +183,6 @@ class UserFriendshipsControllerTest < ActionController::TestCase
     end
   end
   
-  
   context "#create" do
     
     context "when not logged in" do
@@ -252,8 +252,7 @@ class UserFriendshipsControllerTest < ActionController::TestCase
           assert_equal "Friend request sent.", flash[:success]
         end
       end
-    end
-    
+    end  
   end
 
   context "#accept" do
@@ -289,7 +288,6 @@ class UserFriendshipsControllerTest < ActionController::TestCase
       end
 
     end
-
   end
 
   context "#edit" do
