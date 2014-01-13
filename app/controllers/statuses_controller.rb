@@ -6,7 +6,7 @@ class StatusesController < ApplicationController
   # GET /statuses
   # GET /statuses.json
   def index
-    @statuses = Status.all
+    @statuses = Status.order('created_at desc').to_a
   end
 
   # GET /statuses/1
@@ -16,7 +16,8 @@ class StatusesController < ApplicationController
 
   # GET /statuses/new
   def new
-    @status = Status.new
+    @status = current_user.statuses.new
+    @status.build_document
   end
 
   # GET /statuses/1/edit
@@ -43,6 +44,7 @@ class StatusesController < ApplicationController
   # PATCH/PUT /statuses/1.json
   def update
     @status = current_user.statuses.find(params[:id])
+    @document = @status.document
     # if the status being updated has a user_id field, delete it
     # because the user id field should not be updated
     if params[:status] && params[:status].has_key?(:user_id)
@@ -50,7 +52,9 @@ class StatusesController < ApplicationController
     end
     
     respond_to do |format|
-      if @status.update(status_params)
+
+      if @status.update(status_params) && 
+         @document && @document.update(status_params[:document_attributes])
         format.html { redirect_to @status, notice: 'Status was successfully updated.' }
         format.json { head :no_content }
       else
@@ -78,6 +82,6 @@ class StatusesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def status_params
-      params.fetch(:status, {}).permit(:user_id, :content)
+      params.fetch(:status, {}).permit(:user_id, :content, :document_attributes => [:id, :user_id, :remove_attachment, :attachment])
     end
 end

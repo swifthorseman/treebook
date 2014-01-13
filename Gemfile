@@ -3,10 +3,15 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.1'
 
+group :development do
+  gem 'thin'
+end
+
 # Use sqlite3 as the database for Active Record (in dev and test)
 group :development, :test do
   gem 'sqlite3'
   gem 'awesome_print'
+  gem 'log_buddy'
 end
 
 group :test do
@@ -29,6 +34,7 @@ gem 'state_machine'
 
 gem 'draper'
 gem 'js-routes'
+gem 'paperclip'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
