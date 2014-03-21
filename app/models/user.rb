@@ -36,8 +36,16 @@ class User < ActiveRecord::Base
                                 with: /\A[a-zA-Z0-9_\-]+\z/, 
                                 message: 'Must be formatted correctly.'
                             }
-  has_attached_file :avatar
+  has_attached_file :avatar, styles: { large: "800x800>", medium: "300x200>", small: "260x180>", thumb: "80x80#" }
 
+  def self.get_gravatars
+    all.each do |user|
+      if !user.avatar?
+        user.avatar = URI.parse(user.gravatar_url)
+        user.save
+      end
+    end
+  end
 
   def full_name
     first_name + " " + last_name
