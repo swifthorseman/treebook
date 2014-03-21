@@ -7,7 +7,7 @@
 <% @statuses.each do |status| %>
   <% if can_display_status?(status) %>
     <div class="status media">
-      <%= avatar_profile_link status.user, {}, class: 'pull-left media-object' %>
+      <%= avatar_profile_link status.user, {class: "img-rounded"}, class: 'pull-left media-object' %>
       <div class="media-body">
         <h4 class="media-heading"><%= status.user.full_name %></h4>
         <p><%= status.content %></p>

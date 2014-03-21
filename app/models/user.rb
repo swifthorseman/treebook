@@ -43,6 +43,7 @@ class User < ActiveRecord::Base
       if !user.avatar?
         user.avatar = URI.parse(user.gravatar_url)
         user.save
+        print "."
       end
     end
   end
