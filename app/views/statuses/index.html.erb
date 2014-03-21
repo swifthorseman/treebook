@@ -6,22 +6,20 @@
 
 <% @statuses.each do |status| %>
   <% if can_display_status?(status) %>
-    <div class="status">
-      <div class="row">
-        <div class="col-xs-4 col-sm-1">
-          <%= link_to image_tag(status.user.gravatar_url), profile_path(status.user) %>
-        </div>
-        <div class="col-xs-4 col-sm-7">
-          <strong><%= status.user.full_name %></strong>
-          <p><%= status.content %></p>
-          <%= status_document_link(status) %>
-          <div class="meta">
-            <%= link_to time_ago_in_words(status.created_at) + " ago", status %>
+    <div class="status media">
+      <%= avatar_profile_link status.user, {}, class: 'pull-left media-object' %>
+      <div class="media-body">
+        <h4 class="media-heading"><%= status.user.full_name %></h4>
+        <p><%= status.content %></p>
+        <%= status_document_link(status) %>
+        <div class="meta">
+          <%= link_to time_ago_in_words(status.created_at) + " ago", status %>
+          <% if signed_in? && current_user == status.user %>
             <span class="admin">
               | <%= link_to "Edit", edit_status_path(status) %> | 
               <%= link_to "Delete", status, method: :delete, data: { confirm: 'Are you sure you want to delete this status?'} %>
             </span>
-          </div>
+          <% end %>
         </div>
       </div>
     </div>
