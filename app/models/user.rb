@@ -25,7 +25,10 @@ class User < ActiveRecord::Base
   has_many :accepted_user_friendships, class_name: 'UserFriendship',
                                       foreign_key: :user_id,
                                       conditions: {state: 'accepted'}
-  has_many :accepted_friends, through: :accepted_user_friendships, source: :friend  
+  has_many :accepted_friends, through: :accepted_user_friendships, source: :friend
+  
+  has_many :albums
+  has_many :pictures
 
 
   validates :first_name, presence: true
