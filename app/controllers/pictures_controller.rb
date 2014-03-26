@@ -1,4 +1,8 @@
 class PicturesController < ApplicationController
+  before_filter :authenticate_user!, only: [:create, :new, :update, :edit, :destroy]
+  before_filter :find_user
+  before_filter :find_album
+  #before_filter :find_picture, only: [:index, :new, :create]
   before_action :set_picture, only: [:show, :edit, :update, :destroy]
 
   # GET /pictures
@@ -24,11 +28,12 @@ class PicturesController < ApplicationController
   # POST /pictures
   # POST /pictures.json
   def create
-    @picture = Picture.new(picture_params)
+    @picture = @album.pictures.new(picture_params)
+    @picture.user = current_user
 
     respond_to do |format|
       if @picture.save
-        format.html { redirect_to @picture, notice: 'Picture was successfully created.' }
+        format.html { redirect_to album_pictures_path(@album), notice: 'Picture was successfully created.' }
         format.json { render action: 'show', status: :created, location: @picture }
       else
         format.html { render action: 'new' }
@@ -61,7 +66,21 @@ class PicturesController < ApplicationController
     end
   end
 
+  def url_options
+    { profile_name: params[:profile_name] }.merge(super)
+  end
+
+
   private
+
+    def find_album
+      #if signed_in?
+      #  @album = current_user.albums.find(params[:album_id])
+      #else
+        @album = @user.albums.find(params[:album_id])
+      #end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_picture
       @picture = Picture.find(params[:id])
@@ -69,6 +88,10 @@ class PicturesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def picture_params
-      params.require(:picture).permit(:album_id, :user_id, :caption, :description)
+      params.require(:picture).permit(:id, :album_id, :caption, :description, :asset)
+    end
+
+    def find_user
+      @user = User.find_by_profile_name(params[:profile_name])
     end
 end

@@ -30,7 +30,6 @@ class User < ActiveRecord::Base
   has_many :albums
   has_many :pictures
 
-
   validates :first_name, presence: true
   validates :last_name, presence: true
   validates :profile_name, presence: true, 
