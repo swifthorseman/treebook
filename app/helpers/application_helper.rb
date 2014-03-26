@@ -1,5 +1,17 @@
 module ApplicationHelper
 
+  def bootstrap_paperclip_picture(form, paperclip)
+    if form.object.send("#{paperclip}?")
+      content_tag(:div, class: 'control-group') do
+        content_tag(:label, "Current #{paperclip.to_s.titlecase}", class: 'control-label')
+        content_tag(:div, class: 'controls') do
+          image_tag form.object.send(paperclip).send(:url, :small)
+        end
+      end
+        
+    end
+  end
+
   def flash_class(type)
       case type
           when :alert, :error
