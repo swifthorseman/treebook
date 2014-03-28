@@ -1,6 +1,7 @@
 class AlbumsController < ApplicationController
   before_filter :authenticate_user!, only: [:create, :new, :update, :edit, :destroy]
   before_filter :find_user
+  before_filter :add_breadcrumbs
   before_action :set_album, only: [:show, :edit, :update, :destroy]
 
   # GET /albums
@@ -71,6 +72,13 @@ class AlbumsController < ApplicationController
 
 
   private
+
+    def add_breadcrumbs
+      add_breadcrumb @user, profile_path(@user)
+      add_breadcrumb "Albums", albums_path
+    end
+
+
     # Use callbacks to share common setup or constraints between actions.
     def set_album
       #@album = Album.find(params[:id])

@@ -2,18 +2,20 @@ class PicturesController < ApplicationController
   before_filter :authenticate_user!, only: [:create, :new, :update, :edit, :destroy]
   before_filter :find_user
   before_filter :find_album
-  #before_filter :find_picture, only: [:index, :new, :create]
+  before_filter :add_breadcrumbs
   before_action :set_picture, only: [:show, :edit, :update, :destroy]
 
   # GET /pictures
   # GET /pictures.json
   def index
-    @pictures = Picture.all
+    @pictures = @album.pictures.all
   end
 
   # GET /pictures/1
   # GET /pictures/1.json
   def show
+    add_breadcrumb @picture.caption
+    add_breadcrumb @picture, album_picture_path(@album, @picture)
   end
 
   # GET /pictures/new
@@ -23,6 +25,7 @@ class PicturesController < ApplicationController
 
   # GET /pictures/1/edit
   def edit
+    add_breadcrumb "Editing album"
   end
 
   # POST /pictures
@@ -72,6 +75,12 @@ class PicturesController < ApplicationController
 
 
   private
+    def add_breadcrumbs
+      add_breadcrumb @user.first_name, profile_path(@user)
+      add_breadcrumb "Albums", albums_path(@user)
+      add_breadcrumb "Pictures", album_pictures_path(@album)
+    end
+
 
     def find_album
       #if signed_in?
@@ -83,7 +92,7 @@ class PicturesController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_picture
-      @picture = Picture.find(params[:id])
+      @picture = @album.pictures.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

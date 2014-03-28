@@ -35,6 +35,7 @@ gem 'state_machine'
 gem 'draper'
 gem 'js-routes'
 gem 'paperclip'
+gem 'twitter-bootstrap-rails'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'

@@ -63,6 +63,10 @@ class User < ActiveRecord::Base
     profile_name
   end
 
+  def to_s
+    "#{first_name} #{last_name}"
+  end
+
   def has_blocked?(other_user)
     blocked_friends.include?(other_user)
 
