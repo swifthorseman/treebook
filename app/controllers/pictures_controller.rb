@@ -4,6 +4,7 @@ class PicturesController < ApplicationController
   before_filter :find_album
   before_filter :add_breadcrumbs
   before_action :set_picture, only: [:show, :edit, :update, :destroy]
+  before_filter :ensure_proper_user, only: [:edit, :new, :create, :update, :destroy]
 
   # GET /pictures
   # GET /pictures.json
@@ -20,7 +21,7 @@ class PicturesController < ApplicationController
 
   # GET /pictures/new
   def new
-    @picture = Picture.new
+    @picture = @album.pictures.new
   end
 
   # GET /pictures/1/edit
@@ -75,6 +76,13 @@ class PicturesController < ApplicationController
 
 
   private
+    def ensure_proper_user
+      if current_user != @user
+        flash[:error] = "You don't have permission to do that."
+        redirect_to album_pictures_path
+      end
+    end
+
     def add_breadcrumbs
       add_breadcrumb @user.first_name, profile_path(@user)
       add_breadcrumb "Albums", albums_path(@user)
@@ -83,11 +91,11 @@ class PicturesController < ApplicationController
 
 
     def find_album
-      #if signed_in?
-      #  @album = current_user.albums.find(params[:album_id])
-      #else
+      if signed_in? && current_user.profile_name == params[:profile_name]
+        @album = current_user.albums.find(params[:album_id])
+      else
         @album = @user.albums.find(params[:album_id])
-      #end
+      end
     end
 
     # Use callbacks to share common setup or constraints between actions.
@@ -97,7 +105,7 @@ class PicturesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def picture_params
-      params.require(:picture).permit(:id, :album_id, :caption, :description, :asset)
+      params.require(:picture).permit(:id, :user_id, :album_id, :caption, :description, :asset)
     end
 
     def find_user

@@ -2,7 +2,9 @@ class AlbumsController < ApplicationController
   before_filter :authenticate_user!, only: [:create, :new, :update, :edit, :destroy]
   before_filter :find_user
   before_filter :add_breadcrumbs
-  before_action :set_album, only: [:show, :edit, :update, :destroy]
+  before_action :set_album, only: [:edit, :update, :destroy]
+  before_filter :ensure_proper_user, only: [:edit, :new, :create, :update, :destroy]
+
 
   # GET /albums
   # GET /albums.json
@@ -13,13 +15,12 @@ class AlbumsController < ApplicationController
   # GET /albums/1
   # GET /albums/1.json
   def show
+    redirect_to album_pictures_path(params[:id])
   end
 
   # GET /albums/new
   def new
     @album = current_user.albums.new
-    puts "TOTO"
-    puts "new albums is #{@album.inspect}"
   end
 
   # GET /albums/1/edit
@@ -47,7 +48,7 @@ class AlbumsController < ApplicationController
   def update
     respond_to do |format|
       if @album.update(album_params)
-        format.html { redirect_to @album, notice: 'Album was successfully updated.' }
+        format.html { redirect_to album_pictures_path(@album), notice: 'Album was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -72,6 +73,12 @@ class AlbumsController < ApplicationController
 
 
   private
+    def ensure_proper_user
+      if current_user != @user
+        flash[:error] = "You don't have permission to do that."
+        redirect_to albums_path
+      end
+    end
 
     def add_breadcrumbs
       add_breadcrumb @user, profile_path(@user)

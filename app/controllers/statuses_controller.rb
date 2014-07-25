@@ -2,7 +2,6 @@ class StatusesController < ApplicationController
   before_action :set_status, only: [:show, :edit, :update, :destroy]
   before_filter :authenticate_user!, only: [:new, :create, :edit, :update]
 
-
   # GET /statuses
   # GET /statuses.json
   def index
@@ -45,22 +44,25 @@ class StatusesController < ApplicationController
   def update
     @status = current_user.statuses.find(params[:id])
     @document = @status.document
-    # if the status being updated has a user_id field, delete it
-    # because the user id field should not be updated
-    if params[:status] && params[:status].has_key?(:user_id)
-      params[:status].delete(:user_id)
-    end
-    
-    respond_to do |format|
 
-      if @status.update(status_params) && 
-         @document && @document.update(status_params[:document_attributes])
+    @status.transaction do
+      @status.update(status_params)
+      @document.update(status_params[:document_attributes]) if @document
+      raise ActiveRecord::Rollback unless @status.valid? && @document.try(:valid?)
+    end
+
+    respond_to do |format|
         format.html { redirect_to @status, notice: 'Status was successfully updated.' }
         format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @status.errors, status: :unprocessable_entity }
+    end
+
+  rescue ActiveRecord::Rollback
+    respond_to do |format|
+      format.html do
+        flash.now[:error] = "Update failed."
+        render action: "edit" 
       end
+      format.json { render json: @status.errors, status: :unprocessable_entity }
     end
   end
 
@@ -82,6 +84,6 @@ class StatusesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def status_params
-      params.fetch(:status, {}).permit(:user_id, :content, :document_attributes => [:id, :user_id, :remove_attachment, :attachment])
+      params.fetch(:status, {}).permit(:content, :document_attributes => [:id, :user_id, :remove_attachment, :attachment])
     end
 end
