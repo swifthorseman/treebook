@@ -34,6 +34,7 @@ class AlbumsController < ApplicationController
 
     respond_to do |format|
       if @album.save
+        current_user.create_activity @album, 'created'
         format.html { redirect_to @album, notice: 'Album was successfully created.' }
         format.json { render action: 'show', status: :created, location: @album }
       else
@@ -48,6 +49,7 @@ class AlbumsController < ApplicationController
   def update
     respond_to do |format|
       if @album.update(album_params)
+        current_user.create_activity @album, 'updated'
         format.html { redirect_to album_pictures_path(@album), notice: 'Album was successfully updated.' }
         format.json { head :no_content }
       else
@@ -62,6 +64,7 @@ class AlbumsController < ApplicationController
   def destroy
     @album.destroy
     respond_to do |format|
+      current_user.create_activity @album, 'deleted'
       format.html { redirect_to albums_url }
       format.json { head :no_content }
     end
@@ -88,7 +91,6 @@ class AlbumsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_album
-      #@album = Album.find(params[:id])
       @album = current_user.albums.find(params[:id])
     end
 

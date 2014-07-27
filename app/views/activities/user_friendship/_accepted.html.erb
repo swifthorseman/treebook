@@ -1,0 +1,6 @@
+<p>became friends with
+    <% if activity.targetable %>
+      <%= link_to activity.targetable.friend.full_name, profile_path(activity.targetable.friend.profile_name) %>. <br />
+      <%= avatar_profile_link activity.targetable.friend, {}, class: '' %>
+    <% end %>
+</p>

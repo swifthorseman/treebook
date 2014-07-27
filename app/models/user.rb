@@ -29,6 +29,7 @@ class User < ActiveRecord::Base
   
   has_many :albums
   has_many :pictures
+  has_many :activities
 
   validates :first_name, presence: true
   validates :last_name, presence: true
@@ -72,4 +73,12 @@ class User < ActiveRecord::Base
 
   end
   
+
+  def create_activity(item, action)
+    activity = activities.new
+    activity.targetable = item
+    activity.action = action
+    activity.save
+    activity
+  end
 end

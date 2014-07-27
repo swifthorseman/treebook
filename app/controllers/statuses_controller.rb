@@ -30,6 +30,7 @@ class StatusesController < ApplicationController
 
     respond_to do |format|
       if @status.save
+        current_user.create_activity(@status, 'created')
         format.html { redirect_to @status, notice: 'Status was successfully created.' }
         format.json { render action: 'show', status: :created, location: @status }
       else
@@ -48,7 +49,10 @@ class StatusesController < ApplicationController
     @status.transaction do
       @status.update(status_params)
       @document.update(status_params[:document_attributes]) if @document
-      raise ActiveRecord::Rollback unless @status.valid? && @document.try(:valid?)
+      current_user.create_activity(@status, 'updated')
+      unless @status.valid? || (@status.valid? && @document && !@document.valid?)      
+        raise ActiveRecord::Rollback
+      end
     end
 
     respond_to do |format|
@@ -71,6 +75,7 @@ class StatusesController < ApplicationController
   def destroy
     @status.destroy
     respond_to do |format|
+      current_user.create_activity(@status, 'deleted')      
       format.html { redirect_to statuses_url }
       format.json { head :no_content }
     end

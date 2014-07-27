@@ -1,0 +1,17 @@
+<div class="page-header">
+  <h1>Activity Feed</h1>
+</div>
+
+<% @activities.each do |activity| %>
+    <div class="status media">
+      <%= avatar_profile_link activity.user, {class: "img-rounded"}, class: 'pull-left media-object' %>
+      <div class="media-body">
+        <h4 class="media-heading"><%= activity.user.full_name %></h4>
+        <%= render partial: "activities/#{activity.targetable_type.underscore}/#{activity.action}",
+                    locals: { activity: activity } %>
+        <small><%= activity.created_at %></small>
+      </div>
+    </div>
+<% end %>
+
+<%= will_paginate @activities %>
