@@ -3,6 +3,8 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  rescue_from ActiveRecord::RecordNotFound, with: :render_404
+
   before_filter :configure_permitted_parameters, if: :devise_controller?
 
   private
@@ -14,5 +16,9 @@ class ApplicationController < ActionController::Base
         u.permit(:email, :current_password, :password, :password_confirmation, :first_name, :last_name, :profile_name, :avatar)
     }
   end	
+
+  def render_404
+    render file: 'public/404', status: :not_found
+  end
 
 end
